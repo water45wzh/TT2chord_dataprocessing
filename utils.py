@@ -55,47 +55,46 @@ def wrapping_melody(melody_events, beats_sec):
     return melody_track
 
 
-def wrapping_chord(chord_events, beats_sec, to_chroma=False):
+def get_chord_list(chord_events, to_chroma=False):
     chord_symbols = []
-    chord_track = pretty_midi.Instrument(program=0)
 
     init_chord = (root_heigest_note // 12) * 12
     for chord in chord_events:
         if chord is None:
             continue
-        # voicing
-        chord = voicing(chord)
+        # # voicing
+        # chord = voicing(chord)
+        #
+        # # compress to chormagram
+        # comp = to_chromagram(chord['composition']) if to_chroma else chord['composition']
+        #
+        # # shift to lowest root location (from 0)
+        # re_arr = chord['bass'] // 12
+        # for i in range(len(comp)):
+        #     comp[i] = comp[i] - re_arr * 12
+        # bass = chord['bass'] - re_arr * 12
 
-        # compress to chormagram
-        comp = to_chromagram(chord['composition']) if to_chroma else chord['composition']
+        # event_on/off, per beat
+        start = chord['event_on']
+        end = chord['event_off']
 
-        # shift to lowest root location (from 0)
-        re_arr = chord['bass'] // 12
-        for i in range(len(comp)):
-            comp[i] = comp[i] - re_arr * 12
-        bass = chord['bass'] - re_arr * 12
-
-        # event_on/off
-        start = chord['event_on'] * beats_sec
-        end = chord['event_off'] * beats_sec
-
-        # determine the initial location
-        loc = init_chord + bass
-        init_chord_ = (init_chord - 12) if loc > root_heigest_note else init_chord
+        # # determine the initial location
+        # loc = init_chord + bass
+        # init_chord_ = (init_chord - 12) if loc > root_heigest_note else init_chord
 
         symbol = chord['symbol']
-        chord_symbols.append(pretty_midi.Lyric(symbol, start))
+        chord_symbols.append([symbol, start, end])
 
-        for note in comp:
-            note_number = note + init_chord_
-            note = pretty_midi.Note(velocity=100, pitch=int(note_number), start=start, end=end)
-            chord_track.notes.append(note)
+        # for note in comp:
+        #     note_number = note + init_chord_
+        #     note = pretty_midi.Note(velocity=100, pitch=int(note_number), start=start, end=end)
+        #     chord_track.notes.append(note)
 
-    return chord_track, chord_symbols
+    return chord_symbols
 
-def get_chord_list(chord_events, beats_sec, to_chroma=False):
+def wrapping_chord(chord_events, beats_sec, to_chroma=False):
     chord_symbols = []
-    chord_track = pretty_midi.Instrument(program=0)
+    #chord_track = pretty_midi.Instrument(program=0)
 
     init_chord = (root_heigest_note // 12) * 12
     for chord in chord_events:

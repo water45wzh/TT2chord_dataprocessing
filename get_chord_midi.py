@@ -12,3 +12,4 @@ for f in flist:
     if count%1000 == 0:
         print(count)
     count += 1
+    break
