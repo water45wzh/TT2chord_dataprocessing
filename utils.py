@@ -92,6 +92,46 @@ def get_chord_list(chord_events, to_chroma=False):
 
     return chord_symbols
 
+def get_rootnbass_list(chord_events, to_chroma=False):
+    roots = []
+    basss = []
+
+    init_chord = (root_heigest_note // 12) * 12
+    for chord in chord_events:
+        if chord is None:
+            continue
+        # # voicing
+        # chord = voicing(chord)
+        #
+        # # compress to chormagram
+        # comp = to_chromagram(chord['composition']) if to_chroma else chord['composition']
+        #
+        # # shift to lowest root location (from 0)
+        # re_arr = chord['bass'] // 12
+        # for i in range(len(comp)):
+        #     comp[i] = comp[i] - re_arr * 12
+        # bass = chord['bass'] - re_arr * 12
+
+        # event_on/off, per beat
+        start = chord['event_on']
+        end = chord['event_off']
+
+        # # determine the initial location
+        # loc = init_chord + bass
+        # init_chord_ = (init_chord - 12) if loc > root_heigest_note else init_chord
+
+        root = chord['root']
+        bass = chord['bass']
+        roots.append([root, start, end])
+        basss.append([bass, start, end])
+
+        # for note in comp:
+        #     note_number = note + init_chord_
+        #     note = pretty_midi.Note(velocity=100, pitch=int(note_number), start=start, end=end)
+        #     chord_track.notes.append(note)
+
+    return roots, basss
+
 def wrapping_chord(chord_events, beats_sec, to_chroma=False):
     chord_symbols = []
     #chord_track = pretty_midi.Instrument(program=0)
