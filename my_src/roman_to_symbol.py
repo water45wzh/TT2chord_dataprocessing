@@ -7,6 +7,23 @@ from lookup_tables import VAL_TO_NAME, KEY_TO_SCALE, MODE_TO_KEY, NOTE_TO_OFFSET
 from collections import OrderedDict
 
 
+def get_chord_with_quality(data):
+    triad_symbol = ['', 'm', 'o']
+    str = to_name(data['root']) + data['quality']
+
+    if quality == triad_symbol[0]:
+        interval = [4, 3]
+    elif quality == triad_symbol[1]:
+        interval = [3, 4]
+    elif quality == triad_symbol[2]:
+        interval = [3, 3]
+    comp = [data['root']]
+    for i in interval:
+        comp.append(i+comp[-1])
+    return str, comp
+
+######################################################################################
+
 class MyEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, np.integer):
@@ -72,6 +89,9 @@ def chord_to_string(data):
         for a in data['alter']:
             base += ' (%s)' % a
     return base
+
+
+
 
 
 def to_name(input_, sys=0):

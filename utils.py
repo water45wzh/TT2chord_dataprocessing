@@ -1,7 +1,7 @@
 # Zehao modified
 
 import sys
-sys.path.append("./src")
+sys.path.append("./my_src")
 
 import os
 import pretty_midi
@@ -132,9 +132,12 @@ def get_rootnbass_list(chord_events, to_chroma=False):
 
     return roots, basss
 
+
+
+
 def wrapping_chord(chord_events, beats_sec, to_chroma=False):
     chord_symbols = []
-    #chord_track = pretty_midi.Instrument(program=0)
+    chord_track = pretty_midi.Instrument(program=0)
 
     init_chord = (root_heigest_note // 12) * 12
     for chord in chord_events:
@@ -206,6 +209,7 @@ def proc_to_midi(
     filename = os.path.join(save_path, name+'.mid')
     lead_sheet.write(filename)
     return filename
+
 
 def proc_to_chord(
         chord_events,
